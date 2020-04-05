@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- CSS -->
+    <script type="text/javascript" src="app.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            showtable();
+            $('.buy').click(function() {
+                var id = $(this).data('id');
+                var name = $(this).data('name');
+                var price = $(this).data('price');
+                // alert(id + name + price);
+
+                var cart = localStorage.getItem('cart');
+
+                if (!cart) {
+                    var cart = '{"mycart":[]}';
+                }
+
+                cart = JSON.parse(cart);
+                var mylist = {
+                    id: id,
+                    name: name,
+                    price: price,
+                    qty: 1
+                };
+
+                var mycart = cart.mycart;
+                var length = mycart.length;
+                var noti = 0;
+                for (var i = 0; i < length; i++) {
+                    if (id == mycart[i].id) {
+                        var exit = 1;
+                        mycart[i].qty += 1;
+                    }
+                    noti += mycart[i].qty;
+                }
+
+                if (!exit) {
+                    cart.mycart.push(mylist);
+                }
+
+                cart = JSON.stringify(cart);
+                localStorage.setItem('cart', cart);
+                showtable();
+            })
+
+            function showtable() {
+                var mystoreditem = localStorage.getItem('cart');
+                if (mystoreditem) {
+                    var mystoreditem = JSON.parse(mystoreditem);
+                    var mycart = mystoreditem.mycart;
+
+                    var mytable = '';
+                    var total = 0;
+                    var j = 1;
+                    var tempqty = 1;
+                    $.each(mycart, function(i, v) {
+                        if (v) {
+                            var id = v.id;
+                            var name = v.name;
+                            var price = v.price;
+                            var qty = v.qty;
+
+                            mytable += '<tr>' +
+                                '<td>' + j + '</td>' +
+                                '<td>' + name + '</td>' +
+                                '<td>' + price + '</td>' +
+                                '<td><input class="qtychange" type="disabled" data-id="' + i + '" value="' + qty + '" data-id="' + i + '"/></td>' +
+                                '<td>' + (price * qty) + '</td>' +
+                                '</tr>';
+                            total += (price * qty);
+                            j++;
+                        }
+                    })
+
+                    mytable += '<tr>' +
+                        '<td colspan="3" class="text-right">Total Amount:</td>' +
+                        '<td colspan="3" class="text-center">' + total + '</td>' +
+                        '</tr>';
+                    mytable += '<tr><td colspan="5" align="center" class="text-center"><button class="order" data-total="' + total + '">Order</button></td></tr>';
+                    $('tbody').html(mytable);
+                } else {
+                    $('tbody').html('<tr><td colspan="5" class="text-center">Empty Cart!</td></tr>');
+                }
+            }
+            $('tbody').on('click', '.order', function() {
+                var total = $(this).data('total');
+                var order = confirm('Are You Sure to order? Your Total Amount is: ' + total);
+                if (order == true) {
+                    localStorage.clear();
+                    showtable();
+                    alert('Your Order Successfully complete');
+                }
+            })
+
+        })
+    </script>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="fontawesome.2-web/css/all.min.css">
+    <title></title>
+</head>
+
+<body>
+    <div id="header">
+        <i class="fa fa-coffee fa-5x fa-spin" style="color:#4E342E"></i>
+        <!-- <i class="fa fa-mug-hot fa-5x fa-spin" style="color:#da7722"></i> -->
+        <!-- <i class="fa fa-coffee fa-5x fa-spin" style="color:#da7722"></i>
+		<i class="fa fa-mug-hot fa-5x fa-spin" style="color:#da7722"></i>
+		<i class="fa fa-coffee fa-5x fa-spin" style="color:#da7722"></i>
+		<i class="fa fa-mug-hot fa-5x fa-spin" style="color:#da7722"></i>
+		<i class="fa fa-mug-hot fa-5x fa-spin" style="color:#da7722"></i>
+		<i class="fa fa-coffee fa-5x fa-spin" style="color:#da7722"></i>
+		<i class="fa fa-mug-hot fa-5x fa-spin" style="color:#da7722"></i>
+		<i class="fa fa-coffee fa-5x fa-spin" style="color:#da7722"></i>
+		<i class="fa fa-mug-hot fa-5x fa-spin" style="color:#da7722"></i>
+		<i class="fa fa-coffee fa-5x fa-spin" style="color:#da7722"></i>
+		<i class="fa fa-mug-hot fa-5x fa-spin" style="color:#da7722"></i> -->
+    </div>
+    <h1>Coffee World</h1><br><br>
+    <div class="clear"></div>
+    <!-- <i class="fas fa-mug-hot fa-spin fa-5x" style="color:black"></i>
+		<h2>Welcome to My Coffee Shop</h2> -->
+    <div id="navbar">
+        <ul>
+            <li><a href="" class="active">Home</a></li>
+            <li><a href="">About</a></li>
+            <li><a href="">Menu</a></li>
+            <li><a href="">Event</a></li>
+            <li><a href="">Contact</a></li>
+        </ul>
+        <div class="shoppingcart">
+            <a href=""><i class="fas fa-shopping-cart fa-lg" style="color:black;"></i>
+				<span class="badge" style="color:red">
+					3
+				</span>
+			</a>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div id="slider">
+        <img src="image/1.jpg" />
+        <div class="quote">
+            Welcome To My Coffee Shop
+        </div>
+    </div>
+
+    <div id="welcome">
+        <div class="welcome_row">
+            <h1>Our Shop</h1>
+            <hr>
+        </div>
+    </div>
+    <div class="left_welcome">
+        <img src="image/2.jpg">
+        <img src="image/3.jpg">
+        <img src="image/4.jpg">
+    </div>
+    <div class="right_welcome">
+        <h1>Why Choose Us?</h1>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+            in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+    </div>
+
+    <div class="clear"></div>
+
+    <div id="menu">
+        <div class="menu_row">
+            <h1>Our Menu</h1>
+            <hr>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+                in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </p>
+        </div>
+    </div>
+    <div class="special_box">
+        <img src="image/5.jpg" width="270px" height="180px" />
+        <div class="special_box_star">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+        </div>
+        <h2>Espresso</h2>
+        <span>1500MMK</span>
+        <a href='#showprice' class="buy" data-id="1" data-name="Espresso" data-price="1500"><i class="fas fa-cart-plus"></i>Buy Now</a>
+    </div>
+
+    <div class="special_box">
+        <img src="image/6.jpg" width="270px" height="180px" />
+        <div class="special_box_star">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+        </div>
+        <h2>Cafe Latte</h2>
+        <span>2500MMK</span>
+        <a href='#showprice' class="buy" data-id="2" data-name="Cafe Latte" data-price="2500"><i class="fas fa-cart-plus"></i>Buy Now</a>
+    </div>
+
+    <!-- <div class="special_box">
+		<img src="image/7.jpg" width="270px" height="180px"/>
+		<div class="special_box_star">
+			<i class="fas fa-star"></i>
+			<i class="fas fa-star"></i>
+			<i class="fas fa-star"></i>
+			<i class="fas fa-star"></i>
+			<i class="fas fa-star"></i>
+			<i class="fas fa-star-half-alt"></i>
+		</div>
+		<h2>Frappuccino</h2>
+		<span>1200MMK</span>
+		<a href='#showprice' class="buy" data-id="3" data-name="Frappuccino" data-price="1200"><i class="fas fa-cart-plus"></i>Buy Now</a>
+	</div> -->
+
+    <div class="special_box">
+        <img src="image/8.jpg" width="270px" height="180px" />
+        <div class="special_box_star">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+        </div>
+        <h2>Cafe Mocha</h2>
+        <span>1300MMK</span>
+        <a href='#showprice' class="buy" data-id="4" data-name="Cafe Mocha" data-price="1300"><i class="fas fa-cart-plus"></i>Buy Now</a>
+    </div>
+    <div class="special_box">
+        <img src="image/9.jpg" width="270px" height="180px" />
+        <div class="special_box_star">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+        </div>
+        <h2>Caramel Macchiato</h2>
+        <span>2000MMK</span>
+        <a href='#showprice' class="buy" data-id="5" data-name="Caramel Macchiato" data-price="2000"><i class="fas fa-cart-plus"></i>Buy Now</a>
+    </div>
+
+    <div class="clear"></div>
+    <br><br><br><br>
+    <div id="showprice">
+        <table cellpadding="10px" border="1">
+            <thead>
+                <tr>
+                    <td>No</td>
+                    <td>Name</td>
+                    <td>Single Price</td>
+                    <td>Qty</td>
+                    <td>Quantity Price</td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div id="footer">
+        <div class="footer_inside">
+            <div class="left_footer">
+                Copyright &copy; 2020, Coffee World.
+            </div>
+            <div class="right_footer">
+                Make with love by <b>Thu Yein Tun</b>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
